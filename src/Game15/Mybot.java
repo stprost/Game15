@@ -1,38 +1,27 @@
 package Game15;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayDeque;
 
 public class Mybot {
-    private static Game15 game = new Game15();
+    public Game15 game = new Game15();
 
 
-    private static int[] tiles = game.getTiles();
-    private static int blankPos = game.getBlankPos();
-    private static int side = game.getSide();
-    private static int numTiles = game.getNumTiles();
+    private int[] tiles = game.getTiles();
+    private int blankPos = game.getBlankPos();
+    private int side = game.getSide();
+    private int numTiles = game.getNumTiles();
 
-    private static Graph graph = new Graph(side);
+    private Graph graph = new Graph(side);
 
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setTitle("Fifteen Puzzle");
-        f.setResizable(false);
-        f.add(game, BorderLayout.CENTER);
-        f.pack();
-        f.setLocationRelativeTo(null);
-        f.setVisible(true);
-        bot();
+    public Mybot() {
     }
-
-    public static void bot() {
+    
+    public void bot() {
         for (int i = 0; i < (side - 3) * side + side; i++) {
             if (i % side == side - 2) {
                 moveTileTo(i + 1, i + 1);
             } else if (i % side == side - 1) {
-                if (findNode(i + 1) == i + side) {
+                if (findNode(i + 1) == i - 1 + side || findNode(i + 1) == i - 1) {
                     moveTileTo(i + 1, i - 2 + side);
                     moveTileTo(i, i);
                 }
@@ -53,7 +42,7 @@ public class Mybot {
         for (int i = (side - 3) * side + side; i < (side - 3) * side + side * 2 - 1; i++) {
             if (i != (side - 3) * side + side * 2 - 2) {
                 moveTileTo(i + 1 + side, i);
-                if (findNode(i + 1) == i + side) {
+                if (findNode(i + 1) == i + side || findNode(i + 1) == i + 1 + side) {
                     moveTileTo(i + 1, i + 2 + side);
                 }
                 moveTileTo(i + 1 + side, i);
@@ -72,7 +61,7 @@ public class Mybot {
         }
     }
 
-    private static void moveTileTo(int start, int goal) {
+    private void moveTileTo(int start, int goal) {
         Node nodeStart = graph.getNodeList()[findNode(start)];
         Node nodeGoal = graph.getNodeList()[goal];
         Node blankNode = graph.getNodeList()[blankPos];
@@ -90,7 +79,7 @@ public class Mybot {
         }
     }
 
-    private static int findNode(int k) {
+    private int findNode(int k) {
         int r = -1;
         for (int i = 0; i < tiles.length; i++) {
             if (tiles[i] == k) r = i;
@@ -98,7 +87,7 @@ public class Mybot {
         return r;
     }
 
-    public static void changeWithBlank(int a) {
+    public void changeWithBlank(int a) {
         int newBlankPos = a;
         sleep(0);
         tiles[blankPos] = tiles[newBlankPos];
@@ -108,7 +97,7 @@ public class Mybot {
     }
 
 
-    private static void sleep(int time) {
+    private void sleep(int time) {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {
@@ -116,7 +105,7 @@ public class Mybot {
         }
     }
 
-    public static boolean isSolved() {
+    public boolean isSolved() {
         if (tiles[tiles.length - 1] != 0) {
             return false;
         }
@@ -131,5 +120,7 @@ public class Mybot {
     public void reload() {
         game = new Game15();
         graph = new Graph(side);
+        tiles = game.getTiles();
+        blankPos = game.getBlankPos();
     }
 }

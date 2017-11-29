@@ -36,7 +36,7 @@ class Game15 extends JPanel {
     }
 
     public Game15() {
-        final int dim = 640;
+        final int dim = 650;
 
         margin = 80;
         tileSize = (dim - 2 * margin) / side;
