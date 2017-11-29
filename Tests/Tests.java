@@ -7,7 +7,7 @@ public class Tests {
 
     @Test
     public void WinRate() {
-        int quantityOfGames = 10000;
+        int quantityOfGames = 1000;
         int quantityOfWins = 0;
         Mybot mybot = new Mybot();
         for (int i = 0; i < quantityOfGames; i++) {

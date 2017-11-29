@@ -15,7 +15,7 @@ public class Mybot {
 
     public Mybot() {
     }
-    
+
     public void bot() {
         for (int i = 0; i < (side - 3) * side + side; i++) {
             if (i % side == side - 2) {
@@ -25,13 +25,9 @@ public class Mybot {
                     moveTileTo(i + 1, i - 2 + side);
                     moveTileTo(i, i);
                 }
-                graph.deleteNode(graph.getNodeList()[i]);
-                moveTileTo(i + 1, i + side);
-                graph.deleteNode(graph.getNodeList()[i + side]);
-                graph.cancelDeleteNode(graph.getNodeList()[i]);
-                moveTileTo(i, i - 1);
+                moveTitleToWithout(i + 1, i + side, i);
+                moveTitleToWithout(i, i - 1, i + side);
                 graph.deleteNode(graph.getNodeList()[i - 1]);
-                graph.cancelDeleteNode(graph.getNodeList()[i + side]);
                 moveTileTo(i + 1, i);
                 graph.deleteNode(graph.getNodeList()[i]);
             } else {
@@ -46,12 +42,8 @@ public class Mybot {
                     moveTileTo(i + 1, i + 2 + side);
                 }
                 moveTileTo(i + 1 + side, i);
-                graph.deleteNode(graph.getNodeList()[i]);
-                moveTileTo(i + 1, i + 1);
-                graph.deleteNode(graph.getNodeList()[i + 1]);
-                graph.cancelDeleteNode(graph.getNodeList()[i]);
-                moveTileTo(i + 1 + side, i + side);
-                graph.cancelDeleteNode(graph.getNodeList()[i + 1]);
+                moveTitleToWithout(i + 1, i + 1, i);
+                moveTitleToWithout(i + 1 + side, i + side, i + 1);
                 moveTileTo(i + 1, i);
             } else {
                 moveTileTo(side * side - 1, side * side - 2);
@@ -77,6 +69,12 @@ public class Mybot {
             nodeStart = graph.getNodeList()[findNode(start)];
             blankNode = graph.getNodeList()[blankPos];
         }
+    }
+
+    private void moveTitleToWithout(int start, int goal, int statikNode) {
+        graph.deleteNode(graph.getNodeList()[statikNode]);
+        moveTileTo(start, goal);
+        graph.cancelDeleteNode(graph.getNodeList()[statikNode]);
     }
 
     private int findNode(int k) {
