@@ -2,6 +2,7 @@ package Game15;
 
 import java.util.ArrayList;
 
+//Реализация узла графа
 public class Node {
 
     private int key;

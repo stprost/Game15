@@ -2,7 +2,7 @@ package Game15;
 
 
 import java.util.*;
-
+//Реализация графа
 public class Graph {
 
     private Node[] nodeList;
@@ -16,6 +16,7 @@ public class Graph {
         this.makeSquareGraph(side);
     }
 
+    //Функция создание квадратного графа со стороной side
     public void makeSquareGraph(int side) {
         nodeList = new Node[side * side];
         for (int i = 0; i < side * side; i++) {
@@ -37,16 +38,8 @@ public class Graph {
         this.side = side;
     }
 
-    private void prn() {
-        for (int i = 0; i < nodeList.length; i++) {
-            System.out.print(nodeList[i].getKey() + " -> ");
-            for (Node node : nodeList[i].getNeighbors()) {
-                System.out.print(node.getKey() + " ");
-            }
-            System.out.println();
-        }
-    }
-
+    //Эвристическая функция, которая находит самое теоретически близкое расстояние
+    //между двумя вершинами квадратного графа
     private int heuristicFunForSquareGrph(Node start, Node goal) {
         int x1 = start.getKey() % side;
         int y1 = start.getKey() / side;
@@ -54,6 +47,7 @@ public class Graph {
         int y2 = goal.getKey() / side;
         return Math.abs(x1 - x2) + Math.abs(y1 - y2);
     }
+
 
     private Node minFInOpen(ArrayDeque<Node> open) {
         int f = open.getFirst().getF();
@@ -67,6 +61,8 @@ public class Graph {
         return answer;
     }
 
+    //Реализация алгоритма А* для поиска самого близкого пути
+    //между двумя вершинами графа
     public ArrayDeque<Node> aStar(Node start, Node goal) {
         HashSet<Node> close = new HashSet<>();
         ArrayDeque<Node> open = new ArrayDeque<>();
@@ -100,6 +96,7 @@ public class Graph {
         return null;
     }
 
+    //Построение пути
     private ArrayDeque<Node> resultPath(Node start, Node goal){
         ArrayDeque<Node> result = new ArrayDeque<>();
         Node tmp = goal;

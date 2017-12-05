@@ -16,6 +16,7 @@ public class Mybot {
     public Mybot() {
     }
 
+    //Сам алгоритм передвижения фишек на свои места
     public void bot() {
         for (int i = 0; i < (side - 3) * side + side; i++) {
             if (i % side == side - 2) {
@@ -53,6 +54,7 @@ public class Mybot {
         }
     }
 
+    //Передвижение фишки по пути определенному с помощью А*
     private void moveTileTo(int start, int goal) {
         Node nodeStart = graph.getNodeList()[findNode(start)];
         Node nodeGoal = graph.getNodeList()[goal];
@@ -71,12 +73,14 @@ public class Mybot {
         }
     }
 
+    //Тоже самое, что и moveTileTo, только не использую определенный узел графа
     private void moveTitleToWithout(int start, int goal, int statikNode) {
         graph.deleteNode(graph.getNodeList()[statikNode]);
         moveTileTo(start, goal);
         graph.cancelDeleteNode(graph.getNodeList()[statikNode]);
     }
 
+    //Поиск места определенноой фишки
     private int findNode(int k) {
         int r = -1;
         for (int i = 0; i < tiles.length; i++) {
@@ -85,9 +89,10 @@ public class Mybot {
         return r;
     }
 
+    //Замена фишки и пустого места
     public void changeWithBlank(int a) {
         int newBlankPos = a;
-        sleep(0);
+        sleep(1);
         tiles[blankPos] = tiles[newBlankPos];
         blankPos = newBlankPos;
         tiles[blankPos] = 0;
@@ -103,6 +108,7 @@ public class Mybot {
         }
     }
 
+    //Проверка решена ли игра
     public boolean isSolved() {
         if (tiles[tiles.length - 1] != 0) {
             return false;
@@ -115,6 +121,7 @@ public class Mybot {
         return true;
     }
 
+    //Перезагрузка параметров бота
     public void reload() {
         game = new Game15();
         graph = new Graph(side);
