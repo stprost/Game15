@@ -5,18 +5,21 @@ import java.awt.event.*;
 import java.util.Random;
 import javax.swing.*;
 
+import static java.lang.Thread.sleep;
+
 class Game15 extends JPanel {
 
-    private final int side = 4;
-    private final int numTiles = side * side - 1;
+    private static int side = 4;
+    private int numTiles = side * side - 1;
 
     private final Random rand = new Random();
-    private final int[] tiles = new int[numTiles + 1];
-    private final int tileSize;
+    private int[] tiles = new int[numTiles + 1];
+    private int tileSize;
     private int blankPos;
     private final int margin;
     private final int gridSize;
-    private boolean gameOver;
+    public boolean gameOver;
+    private static Dimension gameSize;
 
 
     public int getSide() {
@@ -35,18 +38,17 @@ class Game15 extends JPanel {
         return blankPos;
     }
 
-    public Game15() {
-        final int dim = 650;
 
-        margin = 80;
-        tileSize = (dim - 2 * margin) / side;
+    public Game15() {
+        gameSize = new Dimension(side * 80 + 100, side * 80 + 100);
+        margin = 50;
+        tileSize = 80;
         gridSize = tileSize * side;
 
-        setPreferredSize(new Dimension(dim, dim + margin));
+        setPreferredSize(gameSize);
         setBackground(Color.WHITE);
         setForeground(new Color(0x6495ED));
         setFont(new Font("SansSerif", Font.BOLD, 60));
-
         gameOver = true;
 
         addMouseListener(new MouseAdapter() {
@@ -73,7 +75,7 @@ class Game15 extends JPanel {
 
                     int dir = 0;
                     if (c1 == c2 && Math.abs(r1 - r2) > 0) {
-                        dir = (r1 - r2) > 0 ? 4 : -4;
+                        dir = (r1 - r2) > 0 ? side : -side;
                     } else if (r1 == r2 && Math.abs(c1 - c2) > 0) {
                         dir = (c1 - c2) > 0 ? 1 : -1;
                     }
@@ -96,6 +98,16 @@ class Game15 extends JPanel {
         newGame();
     }
 
+
+    public void setSize(int side) {
+        this.side = side;
+        numTiles = side * side - 1;
+        tiles = new int[numTiles + 1];
+        gameSize = new Dimension(side * 80 + 100, side * 80 + 100);
+        setPreferredSize(gameSize);
+        newGame();
+    }
+
     private void newGame() {
         do {
             reset();
@@ -112,8 +124,6 @@ class Game15 extends JPanel {
     }
 
     private void shuffle() {
-        // don't include the blank space in the shuffle, leave it
-        // in the home position
         int n = numTiles;
         while (n > 1) {
             int r = rand.nextInt(n--);
@@ -123,16 +133,6 @@ class Game15 extends JPanel {
         }
     }
 
-    /*  Only half the permutations of the puzzle are solvable.
-
-        Whenever a tile is preceded by a tile with higher value it counts
-        as an inversion. In our case, with the blank space in the home
-        position, the number of inversions must be even for the puzzle
-        to be solvable.
-
-        See also:
-        www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
-     */
     private boolean isSolvable() {
         int countInversions = 0;
         for (int i = 0; i < numTiles; i++) {
@@ -186,10 +186,14 @@ class Game15 extends JPanel {
         if (gameOver) {
             g.setFont(getFont().deriveFont(Font.BOLD, 18));
             g.setColor(getForeground());
-            String s = "click to start a new game";
+            String s = "Вы настоящий гений!";
+            String s2 = "Нажмите для перезапуска.";
             int x = (getWidth() - g.getFontMetrics().stringWidth(s)) / 2;
-            int y = getHeight() - margin;
+            int y = getHeight() - 30;
             g.drawString(s, x, y);
+            y = getHeight() - 10;
+            x = (getWidth() - g.getFontMetrics().stringWidth(s)) / 2 - 27;
+            g.drawString(s2, x, y);
         }
     }
 
@@ -213,5 +217,84 @@ class Game15 extends JPanel {
 
         drawGrid(g);
         drawStartMessage(g);
+    }
+
+    private static JFrame f = new JFrame();
+    private static JButton buttonBot;
+    private static JButton buttonSize;
+    private static JPanel panelLeft = new JPanel();
+    private static JPanel panelButton = new JPanel();
+    private static JPanel panelGame = new JPanel();
+    private static Mybot mybot;
+
+    public static void wind(boolean activeBot) {
+        Game15 game = new Game15();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setTitle("Game15");
+        f.setResizable(false);
+        f.setLayout(new FlowLayout());
+        buttonBot = new JButton("Запустить чудобота");
+        buttonSize = new JButton("Поменять размер");
+        panelButton.removeAll();
+        panelGame.removeAll();
+        panelLeft.removeAll();
+        panelButton.setPreferredSize(new Dimension(200, 100));
+        panelButton.setLayout(new GridLayout(2, 1, 1, 10));
+        panelButton.add(buttonBot);
+        panelButton.add(buttonSize);
+        panelLeft.setPreferredSize(new Dimension(200, side * 80 + 100));
+        panelLeft.add(panelButton);
+        panelLeft.setBackground(Color.WHITE);
+        f.add(panelLeft, BorderLayout.WEST);
+        panelGame.add(game, BorderLayout.EAST);
+        f.add(panelGame);
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+
+        mybot = new Mybot(game);
+        mybot.bot();
+
+
+
+        buttonBot.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mybot = new Mybot(game);
+                mybot.bot();
+            }
+        });
+        buttonSize.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Size.wind(game);
+            }
+        });
+
+    }
+
+    public static void kek() {
+        JFrame f = new JFrame();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setTitle("Game15");
+        f.setResizable(false);
+        f.setLayout(new FlowLayout());
+        JPanel panel = new JPanel();
+        JPanel panel1 = new JPanel();
+        panel.setPreferredSize(new Dimension(150,150));
+        panel.setBackground(Color.BLACK);
+        panel1.setPreferredSize(new Dimension(150,150));
+        panel1.setBackground(Color.BLUE);
+        f.add(panel);
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        f.add(panel1);
+        f.pack();
     }
 }
