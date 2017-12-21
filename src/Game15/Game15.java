@@ -253,6 +253,7 @@ class Game15 extends JPanel {
         f.setVisible(true);
 
         mybot = new Mybot(game);
+        
         mybot.bot();
 
 

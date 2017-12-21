@@ -16,6 +16,16 @@ public class Mybot {
     public Mybot() {
     }
 
+    public Mybot(Game15 game) {
+        this.game = game;
+        tiles = game.getTiles();
+        blankPos = game.getBlankPos();
+        side = game.getSide();
+        numTiles = game.getNumTiles();
+
+        graph = new Graph(side);
+    }
+
     //Сам алгоритм передвижения фишек на свои места
     public void bot() {
         for (int i = 0; i < (side - 3) * side + side; i++) {
@@ -92,10 +102,11 @@ public class Mybot {
     //Замена фишки и пустого места
     public void changeWithBlank(int a) {
         int newBlankPos = a;
-        sleep(1);
+        sleep(10);
         tiles[blankPos] = tiles[newBlankPos];
         blankPos = newBlankPos;
         tiles[blankPos] = 0;
+        game.gameOver = isSolved();
         game.repaint();
     }
 
