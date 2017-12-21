@@ -1,8 +1,14 @@
 package Game15;
 
+
+import com.sun.jmx.remote.internal.ArrayQueue;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Time;
+import java.util.ArrayDeque;
 import java.util.Random;
+import javax.swing.Timer;
 import javax.swing.*;
 
 import static java.lang.Thread.sleep;
@@ -219,6 +225,7 @@ class Game15 extends JPanel {
         drawStartMessage(g);
     }
 
+
     private static JFrame f = new JFrame();
     private static JButton buttonBot;
     private static JButton buttonSize;
@@ -226,9 +233,15 @@ class Game15 extends JPanel {
     private static JPanel panelButton = new JPanel();
     private static JPanel panelGame = new JPanel();
     private static Mybot mybot;
+    private static Timer timer;
 
     public static void wind(boolean activeBot) {
         Game15 game = new Game15();
+        timer = new javax.swing.Timer(100, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setTitle("Game15");
         f.setResizable(false);
@@ -253,10 +266,7 @@ class Game15 extends JPanel {
         f.setVisible(true);
 
         mybot = new Mybot(game);
-        
         mybot.bot();
-
-
 
         buttonBot.addActionListener(new ActionListener() {
             @Override
@@ -274,28 +284,4 @@ class Game15 extends JPanel {
 
     }
 
-    public static void kek() {
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setTitle("Game15");
-        f.setResizable(false);
-        f.setLayout(new FlowLayout());
-        JPanel panel = new JPanel();
-        JPanel panel1 = new JPanel();
-        panel.setPreferredSize(new Dimension(150,150));
-        panel.setBackground(Color.BLACK);
-        panel1.setPreferredSize(new Dimension(150,150));
-        panel1.setBackground(Color.BLUE);
-        f.add(panel);
-        f.pack();
-        f.setLocationRelativeTo(null);
-        f.setVisible(true);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        f.add(panel1);
-        f.pack();
-    }
 }

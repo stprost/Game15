@@ -1,6 +1,10 @@
 package Game15;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public class Mybot {
     public Game15 game = new Game15();
@@ -25,6 +29,7 @@ public class Mybot {
 
         graph = new Graph(side);
     }
+
 
     //Сам алгоритм передвижения фишек на свои места
     public void bot() {
@@ -74,10 +79,10 @@ public class Mybot {
             graph.deleteNode(nodeStart);
             ArrayDeque<Node> localPath = graph.aStar(blankNode, mainNode);
             for (Node localNode : localPath) {
-                changeWithBlank(localNode.getKey());
+                changeWithBlank(localNode.getKey(), this);
             }
             graph.cancelDeleteNode(nodeStart);
-            changeWithBlank(nodeStart.getKey());
+            changeWithBlank(nodeStart.getKey(), this);
             nodeStart = graph.getNodeList()[findNode(start)];
             blankNode = graph.getNodeList()[blankPos];
         }
@@ -100,9 +105,9 @@ public class Mybot {
     }
 
     //Замена фишки и пустого места
-    public void changeWithBlank(int a) {
+    private void changeWithBlank(int a, Mybot mybot) {
         int newBlankPos = a;
-        sleep(10);
+        mybot.sleep(500);
         tiles[blankPos] = tiles[newBlankPos];
         blankPos = newBlankPos;
         tiles[blankPos] = 0;
@@ -110,8 +115,7 @@ public class Mybot {
         game.repaint();
     }
 
-
-    private void sleep(int time) {
+    public void sleep(int time) {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {
